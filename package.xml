@@ -1,0 +1,21 @@
+<package format="2">
+  <name>taura_Rosi_challenge</name>
+  <version>1.2.4</version>
+  <description>
+  This package provides foo capability.
+  </description>
+  <maintainer email="alikolling@gmail.com">ali</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>rosi_defy</build_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>rosi_defy</exec_depend>
+</package>
