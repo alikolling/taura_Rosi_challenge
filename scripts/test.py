@@ -57,7 +57,7 @@ class Rosi():
 if __name__ == '__main__':
 
 	# initialize the node
-	rospy.init_node('rosi_example_node', anonymous=True)
+	rospy.init_node('rosi_example_node')
 
 	# instantiate the class
 	try:
