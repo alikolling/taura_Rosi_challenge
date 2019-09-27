@@ -5,9 +5,9 @@
 	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
     <node pkg="tf" type="static_transform_publisher" name="camera_to_kinect_rgb" 
-      args="0 0 0 0 0 0 /kinect /camera_rgb_optical_frame 100" />
+      args="0 0 0 -1.5707 -1.5707 0.18 /kinect /camera_rgb_optical_frame 100" />
     <node pkg="tf" type="static_transform_publisher" name="camera_to_kinect_depth" 
-      args="0 0 0 0 0 0 /kinect /camera_depth_optical_frame 100" />
+      args="0 0 0 -1.5707 -1.5707 0.18 /kinect /camera_depth_optical_frame 100" />
     <group ns="rtabmap">
 
         <node pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry" output="screen">
