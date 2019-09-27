@@ -1,6 +1,12 @@
 <launch>
 
-   <master auto="start"/>
+
+  <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+    <param name="target_frame" value="velodyne"/>
+
+    <remap from="cloud_in" to="/sensor/velodyne"/>
+    <remap from="scan" to="/scan"/>
+  </node>
 
 
 
@@ -8,11 +14,15 @@
    <include file="$(find amcl)/examples/amcl_omni.launch" />
 
    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <rosparam file="$(find taura_Rosi_challenge)/params/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
-    <rosparam file="$(find taura_Rosi_challenge)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
-    <rosparam file="$(find taura_Rosi_challenge)/params/local_costmap_params.yaml" command="load" />
-    <rosparam file="$(find taura_Rosi_challenge)/params/global_costmap_params.yaml" command="load" /> 
-    <rosparam file="$(find taura_Rosi_challenge)/params/base_local_planner_params.yaml" command="load" />
- </node>
+        <rosparam file="$(find taura_Rosi_challenge)/params/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+        <rosparam file="$(find taura_Rosi_challenge)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find taura_Rosi_challenge)/params/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find taura_Rosi_challenge)/params/global_costmap_params.yaml" command="load" /> 
+        <rosparam file="$(find taura_Rosi_challenge)/params/base_local_planner_params.yaml" command="load" />
+
+
+        <remap from="scan" to="/scan"/>
+
+    </node>
 
 </launch> 
