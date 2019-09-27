@@ -11,7 +11,7 @@ from cv_bridge import CvBridge, CvBridgeError
 
 class Image_kinect():
     def __init__(self):
-        self.sub = rospy.Subscriber("sensor/kinect_rgb", Image, self.callback, queue_size=1)
+        self.sub = rospy.Subscriber("sensor/ur5toolCam", Image, self.callback, queue_size=1)
         self.bridge = CvBridge()
        
     def callback(self, ros_data):
