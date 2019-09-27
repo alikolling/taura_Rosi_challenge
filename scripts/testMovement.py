@@ -58,17 +58,17 @@ class RosiNode():
         while(True):
             key = getkey()
             if key == 'w':
-                self.value1 = 25
-                self.value2 = 25
+                self.value1 = 15
+                self.value2 = 15
             elif key == 's':
                 self.value1 = -15
                 self.value2 = -15
             elif key == 'd':
-                self.value1 = -25
-                self.value2 = 25
+                self.value1 = -15
+                self.value2 = 15
             elif key == 'a':
-                self.value1 = 25
-                self.value2 = -25
+                self.value1 = 15
+                self.value2 = -15
             elif key == ' ':
                 self.value1 = 0
                 self.value2 = 0
