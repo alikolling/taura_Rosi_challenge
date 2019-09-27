@@ -11,7 +11,7 @@ class RosiNode():
     def __init__(self):
         rospy.init_node('rosi_node')
 
-        print(" W - Andar para frente \n S - Andar para trás \n A - Girar para a esquerda \n D - Girar para a direita \n SPACE - Parar" )
+        print(" W - Andar para frente \n S - Andar para trás \n A - Girar para a esquerda \n D - Girar para a direita \n SPACE - Parar \n J - Levantar pés \n K - Baixar pés \n L - Parar pés " )
 
         pub = rospy.Publisher('/rosi/command_traction_speed', RosiMovementArray, queue_size=10)
         pub2 = rospy.Publisher('/rosi/command_arms_speed', RosiMovementArray, queue_size=10)
@@ -58,17 +58,17 @@ class RosiNode():
         while(True):
             key = getkey()
             if key == 'w':
-                self.value1 = 25
-                self.value2 = 25
+                self.value1 = 15
+                self.value2 = 15
             elif key == 's':
                 self.value1 = -15
                 self.value2 = -15
             elif key == 'd':
-                self.value1 = -25
-                self.value2 = 25
+                self.value1 = -15
+                self.value2 = 15
             elif key == 'a':
-                self.value1 = 25
-                self.value2 = -25
+                self.value1 = 15
+                self.value2 = -15
             elif key == ' ':
                 self.value1 = 0
                 self.value2 = 0
