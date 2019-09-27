@@ -41,20 +41,6 @@
             <remap from="odom" to="odom"/>
             <remap from="scan_cloud" to="/sensor/velodyne"/>
         </node>
-        <node pkg="rtabmap_ros" type="rtabmapviz" name="rtabmapviz" args="-d $(find rtabmap_ros)/launch/config/rgbd_gui.ini" output="screen">
-            <param name="subscribe_odom_info" type="bool" value="true"/>
-            <param name="queue_size"          type="int" value="10"/>
-            <param name="frame_id" type="string" value="base_link"/>
-            <param name="queue_size" type="int" value="10"/>
-            <param name="subscribe_depth" type="bool" value="true"/>
-            <param name="subscribe_rgb" type="bool" value="true"/>
-            <param name="subscribe_scan_cloud" type="bool" value="true"/>
-            <remap from="rgb/image"       to="/sensor/kinect_rgb"/>
-            <remap from="depth/image"     to="/sensor/kinect_depth"/>
-            <remap from="rgb/camera_info" to="/sensor/kinect_info"/>
-            <remap from="odom" to="odom"/>
-            <remap from="scan_cloud" to="/sensor/velodyne"/>
 
-        </node>
     </group>
 </launch>
