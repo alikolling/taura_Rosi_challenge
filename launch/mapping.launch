@@ -21,18 +21,22 @@
             <param name="approx_sync" type="bool" value="false"/>
             <param name="frame_id" type="string" value="base_link"/>
             <param name="queue_size" type="int" value="15"/>
-            <param name="wait_for_transform_duration " type="double" value="0.2"/> 
+            <param name="wait_for_transform_duration " type="double" value="0.1"/> 
             <param name="wait_for_transform" type="bool" value="true"/>
+            <param name="publish_null_when_lost" type="bool" value="true"/>
             <param name="ground_truth_frame_id" type="string" value="map"/>
             <param name="ground_truth_base_frame_id" type="string" value="base_link"/>
-            <param name="tf_delay" type="double" value="0.2"/>
+            <param name="tf_delay" type="double" value="0.1"/>
         </node>        
         <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
             <param name="use_sim_time" type="bool" value="true"/>            
             <param name="publish_tf" type="bool" value="true"/>
             <param name="wait_for_transform" type="bool" value="true"/>
             <param name="wait_for_transform_duration " type="double" value="0.2"/>            
-            <param name="tf_delay" type="double" value="0.2"/>
+            <param name="tf_delay" type="double" value="0.1"/>
+            <param name="cloud_floor_culling_height" type="double" value="0.3"/>
+            <param name="cloud_noise_filtering_radius " type="double" value="1"/>
+            <param name="cloud_noise_filtering_min_neighbors" type="double" value="5"/>
             <param name="frame_id" type="string" value="base_link"/>
             <param name="queue_size" type="int" value="15"/>
             <param name="subscribe_depth" type="bool" value="true"/>
