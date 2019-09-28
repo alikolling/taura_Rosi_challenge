@@ -3,7 +3,6 @@
 
 import rospy
 import sys
-from geometry_msgs.msg import Twist
 from sensor_msgs.msg import PointCloud2
 import pandas as pd
 import numpy as np
@@ -19,10 +18,6 @@ class Navigation():
         self.sub_data = rospy.Subscriber('/sensor/velodyne', PointCloud2, self.getVelodyne)
         self.pub_velodyne = rospy.Publisher('/sensor/velodyne_menor', PointCloud2, queue_size=10)
 
-        #self.sub_data = Twist()
-        #self.sub_data = []
-        #self.sub_data = rospy.Subscriber('', Twist, self.getMsg)
-
         #pub = rospy.Publisher('', type, queue_size=10)
         #rate = rospy.rate(10) # 50hz
 
@@ -32,14 +27,10 @@ class Navigation():
             #print("----")
             pass
 
-    def getMsg(self, msg):
-        data = msg.data
-        print(data)
-
     def getVelodyne(self, msg):
 
         teste = pc2.pointcloud2_to_array(msg)
-        print(teste.dtype)
+        #print(teste.dtype)
         x = []
         y = []
         z = []
@@ -67,37 +58,55 @@ class Navigation():
         tolerance = 0.1
         negative_tolerance = -0.1
 
+        print('-------------------------------------------------------------')
+
         distancia_frontal = df[df['y'] < tolerance]
-        distancia_frontal = distancia_frontal[distancia_frontal['y'] > 0]
-        distancia_frontal = distancia_frontal[distancia_frontal['x'] > 0]
-        distancia_frontal.reset_index(drop=True, inplace=True)
-        value = distancia_frontal[['x']].idxmin()
-        distancia_frontal = distancia_frontal.iloc[value][:]
+        distancia_frontal = distancia_frontal[distancia_frontal['y'] > negative_tolerance]
+        distancia_frontal = distancia_frontal[distancia_frontal['x'] > negative_tolerance]
+        print('Distancia frontal: ')
+        if(distancia_frontal.isnull().values.all()):
+            print('Nada a frente')
+        else:
+            distancia_frontal.reset_index(drop=True, inplace=True)
+            value = distancia_frontal[['x']].idxmin()
+            distancia_frontal = distancia_frontal.iloc[value][:]
+            print(distancia_frontal.at[value[0],'x'])
+        
+        print('')
 
         distancia_direita = df[df['x'] < tolerance]
-        distancia_direita = distancia_direita[distancia_direita['x'] < tolerance]
         distancia_direita = distancia_direita[distancia_direita['y'] < 0]
         distancia_direita = distancia_direita[distancia_direita['x'] > negative_tolerance]
-        distancia_direita.reset_index(drop=True, inplace=True)
-        value = distancia_direita[['x']].idxmin()
-        distancia_direita = distancia_direita.iloc[value][:]
+        print('Distancia direita: ')
+        if(distancia_direita.isnull().values.all()):
+            print('Nada a direita')
+        else:
+            distancia_direita.reset_index(drop=True, inplace=True)
+            value = distancia_direita[['y']].idxmin()
+            distancia_direita = distancia_direita.iloc[value][:]
+            print(distancia_direita.at[value,'y'])
 
-        print(distancia_direita)
+        print('')
 
+        distancia_esquerda = df[df['x'] < tolerance]
+        distancia_esquerda = distancia_esquerda[distancia_esquerda['y'] > 0]
+        distancia_esquerda = distancia_esquerda[distancia_esquerda['x'] > negative_tolerance]
+        print('Distancia esquerda: ')
+        if(distancia_esquerda.isnull().values.all()):
+            print('Nada a esquerda')
+        else:
+            distancia_esquerda.reset_index(drop=True, inplace=True)
+            value = distancia_esquerda[['y']].idxmin()
+            distancia_esquerda = distancia_esquerda.iloc[value][:]
+            print(distancia_esquerda.at[value,'y'])
+
+        print('')
 
         #xises = teste['x']
         #t = np.arange(0,len(xises),1)
 
         #plt.scatter(t, xises)
         #plt.show()
-            
-        #
-        
-        print(distancia_frontal)
-        #print(teste.shape)
-        #print(teste_menor.shape)
-        #print(df)
-
 
 if __name__ == '__main__':
     nav = Navigation()
