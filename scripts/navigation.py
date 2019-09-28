@@ -45,21 +45,43 @@ class Navigation():
         z = []
 
         for i, j in enumerate(teste['x']):
-            if i%400 == 0:
+            if i%1 == 0:
                 x.append(j) 
 
         for i, j in enumerate(teste['y']):
-            if i%400 == 0:
+            if i%1 == 0:
                 y.append(j)
 
         for i, j in enumerate(teste['z']):
-            if i%400 == 0:
+            if i%1 == 0:
                 z.append(j)
 
         teste_menor = np.array([(i, j, k) for i, j, k in zip(x, y, z)], teste.dtype)
-
-        pub_point = pc2.array_to_pointcloud2(teste_menor, frame_id='velodyne')
+        ustop = []
+        for t in teste_menor:
+            #lado esquerdo
+            if abs(t['x'])<0.05 and t['y']>0 and t['z']>0:
+                ustop.append(t)
+            #45 graus lado esquerdo
+            if abs(t['x']-t['y'])<0.05 and t['x'] > 0 and t['z'] > 0:
+                ustop.append(t)
+            #reto 
+            if abs(t['y'])<0.05 and t['x'] > 0 and t['z'] > 0:
+                ustop.append(t)
+            #lado direito
+            if abs(t['x'])<0.05 and t['y']<0 and t['z']>0:
+                ustop.append(t)
+            # 45 graus lado direito
+            if abs(t['x']+t['y'])< 0.05 and t['x'] > 0 and t['z'] > 0:
+                ustop.append(t)
+        
+        bls= np.array(ustop, teste.dtype)
+        print(bls.shape,'ah n broder')
+        
+        pub_point = pc2.array_to_pointcloud2(bls, frame_id='velodyne')
         self.pub_velodyne.publish(pub_point)
+
+
 
 
         #xises = teste['x']
