@@ -1,11 +1,32 @@
 <launch>
 
 
-  <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+  <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan" name="pointcloud_to_laserscan">
     <param name="target_frame" value="velodyne"/>
 
     <remap from="cloud_in" to="/sensor/velodyne"/>
     <remap from="scan" to="/scan"/>
+    <rosparam>
+        target_frame: camera_link
+        transform_tolerance: 1
+        min_height: 0.0
+        max_height: 1.0
+        
+        angle_min: -1.5708
+        angle_max: 1.5708
+        angle_increment: 0.0087
+        scan_time: 0.3333
+        range_min: 0.45
+        range_max: 4.0
+        use_inf: true
+        
+        #concurrency_level affects number of pc queued for processing and the number of threadsused
+        # 0: Detect number of cores
+        # 1: Single threaded
+        # 2: inf : Parallelism level
+        concurrency_level: 1
+      </rosparam>
+
   </node>
 
 
@@ -19,7 +40,6 @@
         <rosparam file="$(find taura_Rosi_challenge)/params/local_costmap_params.yaml" command="load" />
         <rosparam file="$(find taura_Rosi_challenge)/params/global_costmap_params.yaml" command="load" /> 
         <rosparam file="$(find taura_Rosi_challenge)/params/base_local_planner_params.yaml" command="load" />
-
 
         <remap from="scan" to="/scan"/>
 
