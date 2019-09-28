@@ -30,7 +30,7 @@ class Navigation():
             #pub.publish()
             #rate.sleep()
             #print("----")
-            x = 0
+            pass
 
     def getMsg(self, msg):
         data = msg.data
@@ -45,21 +45,44 @@ class Navigation():
         z = []
 
         for i, j in enumerate(teste['x']):
-            if i%400 == 0:
+            if i%5 == 0:
                 x.append(j) 
 
         for i, j in enumerate(teste['y']):
-            if i%400 == 0:
+            if i%5 == 0:
                 y.append(j)
 
         for i, j in enumerate(teste['z']):
-            if i%400 == 0:
+            if i%5 == 0:
                 z.append(j)
 
         teste_menor = np.array([(i, j, k) for i, j, k in zip(x, y, z)], teste.dtype)
 
-        pub_point = pc2.array_to_pointcloud2(teste_menor, frame_id='velodyne')
-        self.pub_velodyne.publish(pub_point)
+        #pub_point = pc2.array_to_pointcloud2(teste_menor, frame_id='velodyne')
+        #self.pub_velodyne.publish(pub_point)
+
+        df = pd.DataFrame(teste_menor, columns=['x','y','z'])
+
+        df = df[df['z'] > 0]
+        tolerance = 0.1
+        negative_tolerance = -0.1
+
+        distancia_frontal = df[df['y'] < tolerance]
+        distancia_frontal = distancia_frontal[distancia_frontal['y'] > 0]
+        distancia_frontal = distancia_frontal[distancia_frontal['x'] > 0]
+        distancia_frontal.reset_index(drop=True, inplace=True)
+        value = distancia_frontal[['x']].idxmin()
+        distancia_frontal = distancia_frontal.iloc[value][:]
+
+        distancia_direita = df[df['x'] < tolerance]
+        distancia_direita = distancia_direita[distancia_direita['x'] < tolerance]
+        distancia_direita = distancia_direita[distancia_direita['y'] < 0]
+        distancia_direita = distancia_direita[distancia_direita['x'] > negative_tolerance]
+        distancia_direita.reset_index(drop=True, inplace=True)
+        value = distancia_direita[['x']].idxmin()
+        distancia_direita = distancia_direita.iloc[value][:]
+
+        print(distancia_direita)
 
 
         #xises = teste['x']
@@ -69,9 +92,11 @@ class Navigation():
         #plt.show()
             
         #
-        print('aqui')
-        print(teste.shape)
-        print(teste_menor.shape)
+        
+        print(distancia_frontal)
+        #print(teste.shape)
+        #print(teste_menor.shape)
+        #print(df)
 
 
 if __name__ == '__main__':
