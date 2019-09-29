@@ -26,6 +26,9 @@ class RosiNode():
 
         self.value3 = 0
         self.value4 = 0
+        self.shut = False
+        rospy.on_shutdown(self.shutdown)
+
 
         while not rospy.is_shutdown():     
 
@@ -81,6 +84,14 @@ class RosiNode():
             elif key == 'l':
                 self.value3 = 0
                 self.value4 = 0
+            if self.shut:
+                print('fechou')
+                break
+
+    def shutdown(self):
+        print('vai fechar')
+        self.shut = True
+        rospy.sleep(1)
 
 if __name__ == '__main__':
     try:
