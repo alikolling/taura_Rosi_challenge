@@ -16,4 +16,7 @@ MANUAL DE INSTALAÇÃO
 
 3- `catkin build`
 
+4- `rosrun taura navigation.py`
+
+
 
