@@ -26,7 +26,7 @@ state = 0
 class Navigation():
     def __init__(self):
         # Iniciando node
-        rospy.init_node('navegacaoNode', anonymous=False)
+        rospy.init_node('navegationNode', anonymous=False)
 
         # Subscrevendo no node velodyne
         self.sub_data = PointCloud2()
@@ -41,7 +41,7 @@ class Navigation():
         # Subscrevendo no node odom_combined
         self.sub_odometry = Odometry()
         self.sub_odometry = []
-        self.sub_odometry = rospy.Subscriber('robot_pose_ekf/odom_combined', PoseWithCovarianceStamped, self.getOdometry)
+        self.sub_odometry = rospy.Subscriber('/robot_pose_ekf/odom_combined', PoseWithCovarianceStamped, self.getOdometry)
         
         # Criando publicadores velodyne_menor, command_traction_speed e command_kinect_joint
         self.pub_velodyne = rospy.Publisher('/sensor/velodyne_menor', PointCloud2, queue_size=10)
@@ -337,11 +337,8 @@ class Navigation():
         distancia = 1.7
 
         Navigation.giro(self, lado, objetivo)
-        time.sleep(2)
         Navigation.andar(self, distancia)
-        time.sleep(2)
         Navigation.giro(self, lado2, objetivo2)
-        time.sleep(2)
         Navigation.andar(self, 15)
 
     # Funcao de costeamento
@@ -382,6 +379,7 @@ class Navigation():
                         self.value1 = 5
                         self.value2 = 5
                     if(self.frente < 1.7):
+                        #state = 3
                         self.value1 = 8
                         self.value2 = 2
                 else:
@@ -411,7 +409,7 @@ class Navigation():
     # Funcao de retorno de odometria
     def odometria(self):
         # Chamada do roslaunch para conversao de odometria
-        os.system("roslaunch taura robot_pose_ekf.launch")
+        os.system("roslaunch taura robot_pose.launch")
 
 if __name__ == '__main__':
     # Inicializando classe Navigation
