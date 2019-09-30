@@ -12,13 +12,13 @@ ekf_se_odom:
   map_frame: map
   odom_frame: odom
   base_link_frame: base_link
-  world_frame: odom
+  world_frame: map
 
   odom0: odometry/visual
-  odom0_config: [true, true, false,
-                 true, true, true,
-                 true,  true,  true,
-                 true, true, true,
+  odom0_config: [true, true, true,
+                 false, false, false,
+                 false, false,  false,
+                 false, false, false,
                  false, false, false]
   odom0_queue_size: 10
   odom0_nodelay: true
@@ -26,11 +26,11 @@ ekf_se_odom:
   odom0_relative: false
 
   imu0: imu/data
-  imu0_config: [true, true, true,
+  imu0_config: [false,  false,  false,
+                true,  true,  true,
                 false,  false,  false,
-                true, true, true,
-                false,  false,  false,
-                true,  true,  true]
+                false, false, true,
+                false,  false,  true]
   imu0_nodelay: false
   imu0_differential: false
   imu0_relative: false
@@ -86,10 +86,10 @@ ekf_se_map:
   world_frame: map
 
   odom0: odometry/visual
-  odom0_config: [true, true, false,
-                 true, true, true,
-                 true,  true,  true,
-                 true, true, true,
+  odom0_config: [true, true, true,
+                 false, false, false,
+                 false,  false,  false,
+                 false, false, false,
                  false, false, false]
   odom0_queue_size: 10
   odom0_nodelay: true
@@ -97,7 +97,7 @@ ekf_se_map:
   odom0_relative: false
 
   odom1: odometry/gps
-  odom1_config: [true,  true,  false,
+  odom1_config: [true,  true,  true,
                  false, false, false,
                  false, false, false,
                  false, false, false,
@@ -109,10 +109,10 @@ ekf_se_map:
 
   imu0: imu/data
   imu0_config: [false, false, false,
-                true,  true,  false,
+                true, true, true,
                 false, false, false,
-                true,  true,  true,
-                true,  true,  true]
+                false,  false,  true,
+                false,  false,  true]
   imu0_nodelay: true
   imu0_differential: false
   imu0_relative: false
@@ -156,7 +156,7 @@ ekf_se_map:
 navsat_transform:
   frequency: 30
   delay: 3.0
-  magnetic_declination_radians: 0.0429351  # For lat/long 55.944831, -3.186998
+  magnetic_declination_radians: 0.0  # For lat/long 55.944831, -3.186998
   yaw_offset: 1.570796327  # IMU reads 0 facing magnetic north, not east
   zero_altitude: false
   broadcast_utm_transform: true
