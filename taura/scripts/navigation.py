@@ -337,8 +337,11 @@ class Navigation():
         distancia = 1.7
 
         Navigation.giro(self, lado, objetivo)
+        time.sleep(2)
         Navigation.andar(self, distancia)
+        time.sleep(2)
         Navigation.giro(self, lado2, objetivo2)
+        time.sleep(2)
         Navigation.andar(self, 15)
 
     # Funcao de costeamento
@@ -403,12 +406,12 @@ class Navigation():
     # Funcao de inicializacao de mapeamento
     def mapping(self):
         # Chamada do roslaunch para inicializacao do mapping pelo rtabmap
-        os.system("roslaunch taura_Rosi_challenge mapping.launch")
+        os.system("roslaunch taura mapping.launch")
 
     # Funcao de retorno de odometria
     def odometria(self):
         # Chamada do roslaunch para conversao de odometria
-        os.system("roslaunch taura_Rosi_challenge robot_pose_ekf.launch")
+        os.system("roslaunch taura robot_pose_ekf.launch")
 
 if __name__ == '__main__':
     # Inicializando classe Navigation
