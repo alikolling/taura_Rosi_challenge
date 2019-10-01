@@ -1,6 +1,6 @@
-# taura_Rosi_challenge
+# Taura - Rosi Challenge
 
-MANUAL DE INSTALAÇÃO
+ - MANUAL DE INSTALAÇÃO
 
 1- Instalar dependências: 
 `sudo apt-get install ros-melodic-rtabmap-ros` 
