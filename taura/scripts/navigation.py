@@ -145,13 +145,15 @@ class Navigation():
         df = pd.DataFrame(teste_menor, columns=['x','y','z'])
 
         # Filtrando angulo z do dataframe
-        df = df[df['z'] > 0.1]
+        #df = df[df['z'] > 0]
+
+        print('--------------------------------------------------------------------------------------')
+
+        df = df[df['z'] > 0.2]
 
         # Definindo tolerancias para os filtros
         tolerance = 0.15
         negative_tolerance = -0.15
-
-        print('--------------------------------------------------------------------------------------')
 
         # Filtrando menor distancia frontal
         self.frente = np.nan
@@ -333,8 +335,8 @@ class Navigation():
         lado = -1
         lado2 = 1
         objetivo = -3*(np.pi/4)
-        objetivo2 = -2.9
-        distancia = 1.7
+        objetivo2 = -3.0
+        distancia = 1.8
 
         Navigation.giro(self, lado, objetivo)
         Navigation.andar(self, distancia)
@@ -379,9 +381,8 @@ class Navigation():
                         self.value1 = 5
                         self.value2 = 5
                     if(self.frente < 1.7):
-                        #state = 3
-                        self.value1 = 8
-                        self.value2 = 2
+                        state = 3
+                        
                 else:
                     distancia = 0
                     if(self.esquerda < self.s_esquerda):
@@ -391,15 +392,26 @@ class Navigation():
                     if(distancia < distanciamin and state == 2):
                         #print('lado A - p direita- ', distancia)
                         self.value1 = 4
-                        self.value2 = 6
+                        self.value2 = 7
                     if(distancia > distanciamax and state == 2):
                         #print('lado A - p esquerda - ', distancia)
-                        self.value1 = 6
+                        self.value1 = 7
                         self.value2 = 4
                     if((distancia < distanciamax) and (distancia > distanciamin) and state == 2):
                         #print('lado A - p retinho - ', distancia)
                         self.value1 = 5
                         self.value2 = 5
+            if(state == 3):
+                flag = 0
+                while(True):
+                    if((self.s_direita < 1.4) and flag == 0):
+                        self.value1 = 7
+                        self.value2 = 3
+                    if(self.direita >= 3.3):
+                        flag = 1
+                        Navigation.giro(self, 1, -3.14)
+                        state = 2
+                        break
 
     # Funcao de inicializacao de mapeamento
     def mapping(self):
