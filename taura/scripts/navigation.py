@@ -144,16 +144,13 @@ class Navigation():
         # Criando dataframe para armazenar os dados
         df = pd.DataFrame(teste_menor, columns=['x','y','z'])
 
-        # Filtrando angulo z do dataframe
-        #df = df[df['z'] > 0]
-
         print('--------------------------------------------------------------------------------------')
 
         df = df[df['z'] > 0.2]
 
         # Definindo tolerancias para os filtros
-        tolerance = 0.15
-        negative_tolerance = -0.15
+        tolerance = 0.1
+        negative_tolerance = -0.1
 
         # Filtrando menor distancia frontal
         self.frente = np.nan
@@ -382,7 +379,13 @@ class Navigation():
                         self.value2 = 5
                     if(self.frente < 1.7):
                         state = 3
-                        
+                        while (True):
+                            if(self.s_direita < 1.2 and distancia > 3):
+                                self.value1 = 7
+                                self.value2 = 3
+                            if(self.s_direita > 1.2 and distancia < 3):
+                                Navigation.giro(self, 1, -3.14)
+                                break
                 else:
                     distancia = 0
                     if(self.esquerda < self.s_esquerda):
@@ -407,7 +410,7 @@ class Navigation():
                     if((self.s_direita < 1.4) and flag == 0):
                         self.value1 = 7
                         self.value2 = 3
-                    if(self.direita >= 3.3):
+                    if(self.s_direita >= 1.4 and self.direita > 5.0):
                         flag = 1
                         Navigation.giro(self, 1, -3.14)
                         state = 2
