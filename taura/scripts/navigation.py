@@ -146,7 +146,7 @@ class Navigation():
 
         print('--------------------------------------------------------------------------------------')
 
-        df = df[df['z'] > 0.2]
+        df = df[df['z'] > 0.15]
 
         # Definindo tolerancias para os filtros
         tolerance = 0.1
@@ -283,8 +283,8 @@ class Navigation():
         yi = self.yPosition
 
         # Definindo velocidade algular para frente
-        self.value1 = 5
-        self.value2 = 5
+        self.value1 = 6
+        self.value2 = 6
 
         # 
         while(True):
@@ -294,6 +294,8 @@ class Navigation():
 
             # Calculando distancia ja percorrida entra distancia atual e inicial
             hipotenusa = math.sqrt((xp - xi)**2 + (yp - yi)**2)
+
+            print(hipotenusa)
 
             # Definindo condicao de parada
             if(hipotenusa > distancia and self.xPosition != 0):
@@ -307,9 +309,9 @@ class Navigation():
     # Funcao principal do programa
     def principal(self):
         # Iniciando thread de costeamento
-        threadCorretora = threading.Thread(name = 'corretora', target = Navigation.corretora, args = (self,))
-        threadCorretora.setDaemon(True)
-        threadCorretora.start()
+        #threadCorretora = threading.Thread(name = 'corretora', target = Navigation.corretora, args = (self,))
+        #threadCorretora.setDaemon(True)
+        #threadCorretora.start()
 
         # LADO A
         '''
@@ -329,92 +331,19 @@ class Navigation():
         
         # LADO B
 
-        lado = -1
-        lado2 = 1
-        objetivo = -3*(np.pi/4)
-        objetivo2 = -3.0
-        distancia = 1.8
-
-        Navigation.giro(self, lado, objetivo)
-        Navigation.andar(self, distancia)
-        Navigation.giro(self, lado2, objetivo2)
-        Navigation.andar(self, 15)
-
-    # Funcao de costeamento
-    def corretora(self):
-        # Definindo variaveis globais
-        global state
-
-        # Definindo tolerancias de costeamento
-        distanciamin = 0.7
-        distanciamax = 0.9
+        Navigation.giro(self, -1, -3*(np.pi/4))
+        Navigation.andar(self, 2.3)
+        Navigation.giro(self, 1, -3.0)
         
-        # Loop de costeamento
-        while(True):
-            time.sleep(0.1)
+        Navigation.andar(self, 3)
+        Navigation.giro(self, 1, 3.0)
+        Navigation.andar(self, 3.5)
+        Navigation.giro(self, -1, 3.14)
+        Navigation.andar(self, 2.5)
 
-            # Verificacao de estados
-            if(state == 2):
-                if(np.isnan(self.esquerda) and np.isnan(self.direita)):
-                    pass
-                elif(np.isnan(self.esquerda)):
-                    distancia = 0
-                    if(self.direita < self.s_direita):
-                        distancia = self.direita
-                        print('90 - ',distancia)
-                    else:
-                        distancia = self.s_direita
-                        print('45 - ', distancia)
-                    if(distancia < distanciamin and state == 2):
-                        #print('lado B - p esquerda - ', distancia)
-                        self.value1 = 6
-                        self.value2 = 4
-                    if(distancia > distanciamax and state == 2):
-                        #print('lado B - p direita - ', distancia)
-                        self.value1 = 4
-                        self.value2 = 6
-                    if((distancia < distanciamax) and (distancia > distanciamin) and state == 2):
-                        #print('lado B - p retinho- ', distancia)
-                        self.value1 = 5
-                        self.value2 = 5
-                    if(self.frente < 1.7):
-                        state = 3
-                        while (True):
-                            if(self.s_direita < 1.2 and distancia > 3):
-                                self.value1 = 7
-                                self.value2 = 3
-                            if(self.s_direita > 1.2 and distancia < 3):
-                                Navigation.giro(self, 1, -3.14)
-                                break
-                else:
-                    distancia = 0
-                    if(self.esquerda < self.s_esquerda):
-                        distancia = self.esquerda
-                    else:
-                        distancia = self.s_esquerda
-                    if(distancia < distanciamin and state == 2):
-                        #print('lado A - p direita- ', distancia)
-                        self.value1 = 4
-                        self.value2 = 7
-                    if(distancia > distanciamax and state == 2):
-                        #print('lado A - p esquerda - ', distancia)
-                        self.value1 = 7
-                        self.value2 = 4
-                    if((distancia < distanciamax) and (distancia > distanciamin) and state == 2):
-                        #print('lado A - p retinho - ', distancia)
-                        self.value1 = 5
-                        self.value2 = 5
-            if(state == 3):
-                flag = 0
-                while(True):
-                    if((self.s_direita < 1.4) and flag == 0):
-                        self.value1 = 7
-                        self.value2 = 3
-                    if(self.s_direita >= 1.4 and self.direita > 5.0):
-                        flag = 1
-                        Navigation.giro(self, 1, -3.14)
-                        state = 2
-                        break
+        Navigation.giro(self, -1, -2.6)
+        Navigation.andar(self, 2.5)
+        Navigation.giro(self, 1, 2.6)
 
     # Funcao de inicializacao de mapeamento
     def mapping(self):
@@ -425,6 +354,7 @@ class Navigation():
     def odometria(self):
         # Chamada do roslaunch para conversao de odometria
         os.system("roslaunch taura robot_pose.launch")
+
 
 if __name__ == '__main__':
     # Inicializando classe Navigation
