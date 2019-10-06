@@ -28,11 +28,6 @@ class Navigation():
         # Iniciando node
         rospy.init_node('navegationNode', anonymous=False)
 
-        # Subscrevendo no node velodyne
-        self.sub_data = PointCloud2()
-        self.sub_data = []
-        self.sub_data = rospy.Subscriber('/sensor/velodyne', PointCloud2, self.getVelodyne)
-
         # Subscrevendo no node imu
         self.sub_imu = Imu()
         self.sub_imu = []
@@ -82,7 +77,7 @@ class Navigation():
     def publicacao(self):
         # Declarando variaveis 
         self.kinect = Float32()
-        self.kinect.data = np.float32(-0.15)
+        self.kinect.data = np.float32(-0.23)
 
         # Loop de publicacao
         while not rospy.is_shutdown():
@@ -116,133 +111,6 @@ class Navigation():
         orientation_list = [data.x, data.y, data.z, data.w]
         # Convertendo lista de orientacao da odometria para vetores de euler
         (roll, pitch, yaw) = euler_from_quaternion (orientation_list)
-
-    # Funcao de retorno do velodyne
-    def getVelodyne(self, msg):
-        # Recebendo odometria
-        teste = pc2.pointcloud2_to_array(msg)
-        x = []
-        y = []
-        z = []
-
-        # Filtrando dados (pontos) para diminuir quantidade de processamento
-        for i, j in enumerate(teste['x']):
-            if i%5 == 0:
-                x.append(j) 
-
-        for i, j in enumerate(teste['y']):
-            if i%5 == 0:
-                y.append(j)
-
-        for i, j in enumerate(teste['z']):
-            if i%5 == 0:
-                z.append(j)
-
-        # Transformando valores em um array
-        teste_menor = np.array([(i, j, k) for i, j, k in zip(x, y, z)], teste.dtype)
-
-        # Criando dataframe para armazenar os dados
-        df = pd.DataFrame(teste_menor, columns=['x','y','z'])
-
-        print('--------------------------------------------------------------------------------------')
-
-        df = df[df['z'] > 0.15]
-
-        # Definindo tolerancias para os filtros
-        tolerance = 0.1
-        negative_tolerance = -0.1
-
-        # Filtrando menor distancia frontal
-        self.frente = np.nan
-        distancia_frontal = df[df['y'] < tolerance]
-        distancia_frontal = distancia_frontal[distancia_frontal['y'] > negative_tolerance]
-        distancia_frontal = distancia_frontal[distancia_frontal['x'] > negative_tolerance]
-        print('Distancia frontal: ')
-        if(distancia_frontal.isnull().values.all()):
-            print('Nada a frente')
-            self.frente = np.nan
-        else:
-            distancia_frontal.reset_index(drop=True, inplace=True)
-            value = distancia_frontal[['x']].idxmin()
-            distancia_frontal = distancia_frontal.iloc[value][:]
-            self.frente = distancia_frontal.at[value[0],'x']
-            print(self.frente)
-        print('')
-
-        # Filtrando menor distancia da direita (90 graus)
-        self.direita = np.nan
-        distancia_direita = df[df['x'] < tolerance]
-        distancia_direita = distancia_direita[distancia_direita['y'] < 0]
-        distancia_direita = distancia_direita[distancia_direita['x'] > negative_tolerance]
-        print('Distancia direita: ')
-        if(distancia_direita.isnull().values.all()):
-            print('Nada a direita')
-            self.direita = np.nan
-        else:
-            distancia_direita.reset_index(drop=True, inplace=True)
-            value = distancia_direita[['y']].idxmin()
-            distancia_direita = distancia_direita.iloc[value][:]
-            self.direita = distancia_direita.at[value[0],'y']
-            self.direita = abs(self.direita)
-            print(self.direita)
-        print('')
-
-        # Filtrando menor distancia da esquerda (90 graus)
-        self.esquerda = np.nan
-        distancia_esquerda = df[df['x'] < tolerance]
-        distancia_esquerda = distancia_esquerda[distancia_esquerda['y'] > 0]
-        distancia_esquerda = distancia_esquerda[distancia_esquerda['x'] > negative_tolerance]
-        print('Distancia esquerda: ')
-        if(distancia_esquerda.isnull().values.all()):
-            print('Nada a esquerda')
-            self.esquerda = np.nan
-        else:
-            distancia_esquerda.reset_index(drop=True, inplace=True)
-            value = distancia_esquerda[['y']].idxmin()
-            distancia_esquerda = distancia_esquerda.iloc[value][:]
-            self.esquerda = distancia_esquerda.at[value[0],'y']
-            print(self.esquerda)
-        print('')
-
-        # Filtrando distancia diagonal direita (45 graus)
-        #self.s_direita = np.nan
-        dd_direita = df.loc[((abs(df['x'] + df['y'])) <= (tolerance)) & df['x'] > 0]
-        print('Distancia diagonal direita: ')
-        if(dd_direita.isnull().values.all()):
-            print('Nada na diagonal direita')
-            #self.s_direita = np.nan
-        else:
-            dd_direita.reset_index(drop=True, inplace=True)
-            value = dd_direita[['x']].idxmin()
-            dd_direita = dd_direita.iloc[value][:]
-            #print(dd_direita.at[value[0],'x'])
-            #x = dd_direita.at[value[0],'x']**2
-            self.s_direita = dd_direita.at[value[0],'y']
-            self.s_direita = abs(self.s_direita)
-            #soma = x + y
-            #hip_direita = math.sqrt(soma)
-            print(self.s_direita)
-        print('')
-
-        # Filtrando distancia diagonal esquerda (45 graus)
-        #self.s_direita = np.nan
-        dd_esquerda = df.loc[((abs(df['x'] - 2*df['y'])) <= (tolerance)) & df['x'] > 0]
-        print('Distancia diagonal esquerda: ')
-        if(dd_esquerda.isnull().values.all()):
-            print('Nada na diagonal esquerda')
-            #self.s_direita = np.nan
-        else:
-            dd_esquerda.reset_index(drop=True, inplace=True)
-            value = dd_esquerda[['x']].idxmin()
-            dd_esquerda = dd_esquerda.iloc[value][:]
-            #print(dd_esquerda.at[value[0],'x'])
-            #x = dd_esquerda.at[value[0],'x']**2
-            self.s_esquerda = dd_esquerda.at[value[0],'y']
-            #soma = x + y
-            #hip_esquerda = math.sqrt(soma)
-            #print(hip_esquerda)
-            print(self.s_esquerda)
-        print('')      
 
     def giro(self, lado, objetivo):
         # Definindo variaveis globais
@@ -283,10 +151,10 @@ class Navigation():
         yi = self.yPosition
 
         # Definindo velocidade algular para frente
-        self.value1 = 6
-        self.value2 = 6
+        self.value1 = 5
+        self.value2 = 5
 
-        # 
+        
         while(True):
             # Armazenando posicao atual
             xp = self.xPosition
@@ -308,42 +176,41 @@ class Navigation():
 
     # Funcao principal do programa
     def principal(self):
-        # Iniciando thread de costeamento
-        #threadCorretora = threading.Thread(name = 'corretora', target = Navigation.corretora, args = (self,))
-        #threadCorretora.setDaemon(True)
-        #threadCorretora.start()
 
         # LADO A
-        '''
-        lado = 1
-        lado2 = -1
-        objetivo = 3*(np.pi/4)
-        objetivo2 = np.pi
-        distancia = 3.2
-
-        #Navigation.andar(self, 2)
-        #time.sleep(2)
-        Navigation.giro(self, lado, objetivo)
-        Navigation.andar(self, distancia)
-        Navigation.giro(self, lado2, objetivo2)
-        Navigation.andar(self, 10)
-        '''
         
         # LADO B
 
         Navigation.giro(self, -1, -3*(np.pi/4))
-        Navigation.andar(self, 2.3)
+        Navigation.andar(self, 2.15)
         Navigation.giro(self, 1, -3.0)
         
         Navigation.andar(self, 3)
-        Navigation.giro(self, 1, 3.0)
+        Navigation.giro(self, 1, 3.13)
         Navigation.andar(self, 3.5)
         Navigation.giro(self, -1, 3.14)
-        Navigation.andar(self, 2.5)
+        Navigation.andar(self, 2.3)
 
-        Navigation.giro(self, -1, -2.6)
-        Navigation.andar(self, 2.5)
-        Navigation.giro(self, 1, 2.6)
+        Navigation.giro(self, -1, -2.5)
+        Navigation.andar(self, 1.0)
+        Navigation.giro(self, 1, -3.0)
+        Navigation.andar(self, 0.75)
+        Navigation.giro(self, 1, 2.5)
+        Navigation.andar(self, 0.55)
+        Navigation.giro(self, -1, -3.13)
+
+        Navigation.andar(self, 2.3)
+        Navigation.giro(self, 1, 3.1)
+        Navigation.andar(self, 4)
+
+        Navigation.andar(self, 2)
+        Navigation.giro(self, 1, 2.9)
+        Navigation.andar(self, 7.5)
+        Navigation.giro(self, -1, 3.12)
+        Navigation.andar(self, 7)
+
+        #Navigation.giro(self, 1, 3.12)
+        #Navigation.andar(self, 3)
 
     # Funcao de inicializacao de mapeamento
     def mapping(self):
@@ -354,7 +221,6 @@ class Navigation():
     def odometria(self):
         # Chamada do roslaunch para conversao de odometria
         os.system("roslaunch taura robot_pose.launch")
-
 
 if __name__ == '__main__':
     # Inicializando classe Navigation
