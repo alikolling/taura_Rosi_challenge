@@ -15,13 +15,18 @@ python-pip`
 
 `pip install pandas`
 
+`pip install matplotlib`
+
+
 #### Baixar repositório:
 
 `git clone https://github.com/alikolling/taura_Rosi_challenge.git --recursive`
 
+
 #### Compilar:
 
 `catkin build`
+
 
 #### Rodar código:
 
