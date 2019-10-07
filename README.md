@@ -4,7 +4,7 @@
 
 #### Instalar dependências: 
 `
-sudo apt-get install ros-melodic-rtabmap-ros 
+sudo apt install ros-melodic-rtabmap-ros 
 ros-melodic-navigation 
 ros-melodic-pointcloud-to-laserscan 
 ros-melodic-robot-pose-ekf 
