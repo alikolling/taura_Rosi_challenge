@@ -19,9 +19,15 @@ from geometry_msgs.msg import PoseWithCovarianceStamped
 import os
 from std_msgs.msg import Float32 
 
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
 # Definindo configuracoes iniciais
 yaw = np.pi
 state = 0
+ox, oy = 0., 0.
+
+
 
 class Navigation():
     def __init__(self):
@@ -71,9 +77,44 @@ class Navigation():
 
         # Chamando funcao principal
         Navigation.principal(self)
+        self.graph()
+        self.flame = False
+
+    def animate(i, xs, ys):
+        global ox, oy
+        # Add x and y to lists
+        xs.append(ox)
+        ys.append(oy)
+
+        # Draw x and y lists
+        ax.clear()
+        ax.plot(xs, ys)
+        
+        if self.flame:
+            ax.plot(ox, oy, 'ro', markersize=15, label='Flame')
+            self.flame = False
+
+        # Format plot
+        plt.title('Odometry')
+        plt.ylabel('X(m)')
+        plt.xlabel('y(m)')
+
+    def graph():
+        global ox, oy
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+        xs = []
+        ys = []
+
+        # Set up plot to call animate() function periodically
+        ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys), interval=1000)
+        plt.show()
 
     # Funcao de retorno da odometria
     def getOdometry(self, msg):
+        global ox, oy
+        ox = msg.pose.pose.position.x
+        oy = msg.pose.pose.position.y
         self.xPosition = msg.pose.pose.position.x
         self.yPosition = msg.pose.pose.position.y
 
@@ -314,6 +355,7 @@ class Navigation():
         Navigation.andar(self, 3)
         Navigation.giro(self, 1, 3.13)
         Navigation.andar(self, 1)
+        self.flame = True
         Navigation.andar(self, 2.5)
         Navigation.giro(self, -1, 3.14)
         Navigation.andar(self, 1.9)
