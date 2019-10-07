@@ -30,7 +30,7 @@ python-pip`
 
 #### Rodar código:
 
-`rosrun taura navigation.py`
+`roslaunch taura rosi.launch`
 
 
 
