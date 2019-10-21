@@ -1,4 +1,4 @@
 <launch>
-    <node pkg="taura_Rosi_challenge" type="navigation.py" name="navigation" />
+    <node pkg="taura" type="navigation.py" name="navigation" />
     
 </launch>
